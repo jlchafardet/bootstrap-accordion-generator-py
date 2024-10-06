@@ -1,4 +1,14 @@
-# accordion_generator.py
+# ============================================================================ 
+# Author: José Luis Chafardet G. 
+# Email: jose.chafardet@icloud.com 
+# Github: https://github.com/jlchafardet 
+# 
+# File Name: accordion_generator.py 
+# Description: A Python script to generate an accordion HTML structure based 
+# on user input, including support for multi-line answers and image URLs. 
+# Created: 2023-10-01 
+# Last Modified: 2023-10-01 
+# ============================================================================ 
 
 import re
 import uuid  # Import the uuid module for generating unique identifiers
