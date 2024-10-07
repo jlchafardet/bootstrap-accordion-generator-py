@@ -77,9 +77,13 @@ def generate_accordion(unique_id, num_items):
             # Replace double asterisks with <strong> tags
             line = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', line)
             
-            if line.startswith('#'):
-                # Remove the '#' and wrap the line in <h2> tags
-                processed_lines.append(f'<h2>{line[1:].strip()}</h2>')
+            # Check for heading levels based on the number of leading '#' characters
+            if line.startswith('###'):
+                processed_lines.append(f'<h3>{line[3:].strip()}</h3>')  # Strip the '###' characters
+            elif line.startswith('##'):
+                processed_lines.append(f'<h2>{line[2:].strip()}</h2>')  # Strip the '##' characters
+            elif line.startswith('#'):
+                processed_lines.append(f'<h1>{line[1:].strip()}</h1>')  # Strip the '#' character
             else:
                 # Replace newline characters with <br /> and ensure a newline follows each <br />
                 processed_lines.append(line.replace('\n', '<br />\n'))
