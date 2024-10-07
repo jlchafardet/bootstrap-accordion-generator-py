@@ -1,2 +1,4 @@
 *.txt
 workflow.json
+
+.vscode

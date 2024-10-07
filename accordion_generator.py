@@ -71,8 +71,21 @@ def generate_accordion(unique_id, num_items):
         # Get multi-line input for the answer
         answer = get_multiline_input("Please insert the answer (leave two blank lines to finish): ")
         
-        # Replace newline characters with <br />
-        answer = answer.replace('\n', '<br />')
+        # Process each line in the answer
+        processed_lines = []
+        for line in answer.splitlines():
+            # Replace double asterisks with <strong> tags
+            line = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', line)
+            
+            if line.startswith('#'):
+                # Remove the '#' and wrap the line in <h2> tags
+                processed_lines.append(f'<h2>{line[1:].strip()}</h2>')
+            else:
+                # Replace newline characters with <br /> and ensure a newline follows each <br />
+                processed_lines.append(line.replace('\n', '<br />\n'))
+        
+        # Join processed lines with <br /> for normal lines
+        answer = '<br />\n'.join(processed_lines)
         
         # Ask if the answer has images
         has_images = input("Does this answer have images? (y/n): ").strip().lower()
@@ -81,7 +94,7 @@ def generate_accordion(unique_id, num_items):
             num_images = get_non_negative_integer("How many images? ")
             for _ in range(num_images):
                 image_url = input("Please enter the image full URL: ")
-                answer += f'<br><img src="{image_url}" alt="Image" />'  # Append image in proper format
+                answer += f'\n<br/><img class="img-thumbnail" src="{image_url}" alt="Image" /><br />\n'  # Append image in proper format
         
         # Generate unique IDs
         heading_id = f"heading{i}"
