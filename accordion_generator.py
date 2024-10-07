@@ -12,6 +12,7 @@
 
 import re
 import uuid  # Import the uuid module for generating unique identifiers
+import sys  # Import the sys module to access command-line arguments
 
 def format_answer(answer):
     # Regex to find all URLs in the answer
@@ -156,6 +157,42 @@ def generate_accordion(unique_id, num_items):
     return ''.join(html_content)
 
 def main():
+    # Check for command-line arguments
+    if len(sys.argv) > 1 and sys.argv[1] == "links":
+        # Request multi-line input for links
+        links_input = get_multiline_input("Please insert the text with Markdown links (leave two blank lines to finish): ")
+        
+        # Process the input to convert Markdown links to HTML links
+        processed_lines = []
+        in_list = False  # Track if we are currently in a list
+
+        for line in links_input.splitlines():
+            # Check for lines starting with '-'
+            if line.startswith('-'):
+                if not in_list:
+                    processed_lines.append('<ul>')  # Start a new unordered list
+                    in_list = True
+                # Convert Markdown link to HTML link
+                line = re.sub(r'\[(.*?)\]\((.*?)\)', r'<a href="\2">\1</a>', line)
+                processed_lines.append(f'    <li>{line[1:].strip()}</li>')  # Add list item
+            else:
+                if in_list:
+                    processed_lines.append('</ul>')  # Close the unordered list if we were in one
+                    in_list = False
+                # Process non-list lines (convert Markdown links)
+                line = re.sub(r'\[(.*?)\]\((.*?)\)', r'<a href="\2">\1</a>', line)
+                processed_lines.append(line)  # Add normal line
+
+        # Close any open list at the end
+        if in_list:
+            processed_lines.append('</ul>')
+
+        # Join processed lines and output to console
+        processed_output = '\n'.join(processed_lines)
+        print("Processed HTML Links:")
+        print(processed_output)
+        return  # Exit the function after processing links
+
     num_items = get_positive_integer("How many items will this accordion have? ")
     unique_id = input("Please enter a unique identifier for the accordion (leave blank for auto-generated): ")
     
