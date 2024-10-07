@@ -73,23 +73,49 @@ def generate_accordion(unique_id, num_items):
         
         # Process each line in the answer
         processed_lines = []
+        in_list = False  # Track if we are currently in a list
+
         for line in answer.splitlines():
+            # Replace Markdown links with HTML links
+            line = re.sub(r'\[(.*?)\]\((.*?)\)', r'<a href="\2">\1</a>', line)
+            
             # Replace double asterisks with <strong> tags
             line = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', line)
             
             # Check for heading levels based on the number of leading '#' characters
             if line.startswith('###'):
+                if in_list:
+                    processed_lines.append('</ul>')  # Close the unordered list if we were in one
+                    in_list = False
                 processed_lines.append(f'<h3>{line[3:].strip()}</h3>')  # Strip the '###' characters
             elif line.startswith('##'):
+                if in_list:
+                    processed_lines.append('</ul>')  # Close the unordered list if we were in one
+                    in_list = False
                 processed_lines.append(f'<h2>{line[2:].strip()}</h2>')  # Strip the '##' characters
             elif line.startswith('#'):
+                if in_list:
+                    processed_lines.append('</ul>')  # Close the unordered list if we were in one
+                    in_list = False
                 processed_lines.append(f'<h1>{line[1:].strip()}</h1>')  # Strip the '#' character
+            elif line.startswith('-'):
+                if not in_list:
+                    processed_lines.append('<ul>')  # Start a new unordered list
+                    in_list = True
+                processed_lines.append(f'    <li>{line[1:].strip()}</li>')  # Add list item
             else:
-                # Replace newline characters with <br /> and ensure a newline follows each <br />
+                if in_list:
+                    processed_lines.append('</ul>')  # Close the unordered list if we were in one
+                    in_list = False
+                # Add normal lines
                 processed_lines.append(line.replace('\n', '<br />\n'))
         
+        # Close any open list at the end
+        if in_list:
+            processed_lines.append('</ul>')
+
         # Join processed lines with <br /> for normal lines
-        answer = '<br />\n'.join(processed_lines)
+        answer = '\n'.join(processed_lines)
         
         # Ask if the answer has images
         has_images = input("Does this answer have images? (y/n): ").strip().lower()
