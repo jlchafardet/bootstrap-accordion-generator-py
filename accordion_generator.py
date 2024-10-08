@@ -8,27 +8,12 @@
 # on user input, including support for multi-line answers and image URLs. 
 # Created: 2023-10-01 
 # Last Modified: 2023-10-01 
+# Version: 1.0.0
 # ============================================================================ 
 
 import re  # Import regular expressions for text processing
 import uuid  # Import the uuid module for generating unique identifiers
 import sys  # Import the sys module to access command-line arguments
-
-def format_answer(answer):
-    """
-    Replace URLs in the answer with HTML <img> tags.
-
-    Args:
-        answer (str): The input string containing URLs.
-
-    Returns:
-        str: The formatted answer with URLs replaced by <img> tags.
-    """
-    # Regex to find all URLs in the answer
-    url_pattern = r'(https?://[^\s]+)'
-    # Replace URLs with img tags
-    formatted_answer = re.sub(url_pattern, r'<img src="\1" alt="Image" />', answer)
-    return formatted_answer
 
 def get_multiline_input(prompt):
     """
