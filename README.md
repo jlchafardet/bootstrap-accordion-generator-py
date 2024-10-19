@@ -25,6 +25,10 @@ The Bootstrap Accordion Generator is a Python script that generates a Bootstrap 
 - **Error Handling**: Descriptive error messages guide users in correcting invalid inputs.
 - **HTML Output**: The generated accordion HTML is exported to a text file named `accordion_<unique_id>.txt`.
 
+## To-Do
+
+- **Custom Accordion**: Add custom accordion format
+
 ## Usage
 
 ```bash
